@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusBlog | Share Your Stories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container">
+            <a href="#home" class="logo">Nexus<span>Blog</span></a>
+
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#explore" class="nav-link">Explore</a>
+                <a href="#publish" class="nav-link">Publish</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="#login" class="nav-btn login-btn">Login</a>
+                <a href="#register" class="nav-btn register-btn">Register</a>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="parallax home-section">
+        <div class="parallax-content">
+            <h1 style="color: black;">Welcome to <span>NexusBlog</span></h1>
+            <p style="color: black;">Where stories come to life and ideas find their voice</p>
+            <button class="cta-btn" data-target="explore">Explore Blogs</button>
+
+<script>
+  // Better method using event listeners
+  document.querySelector('.cta-btn[data-target="explore"]').addEventListener('click', function() {
+    // Smooth scroll to target section
+    const target = document.getElementById(this.dataset.target);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      
+      // Update URL hash
+      window.location.hash = '#' + this.dataset.target;
+    }
+  });
+</script>
+        </div>
+    </section>
+
+
+
+    <!-- Explore Blogs Section -->
+    <section id="explore" class="section explore-section">
+        <div class="container">
+            <h2 class="section-title">Latest Blogs</h2>
+
+            <div class="blog-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="technology">Technology</button>
+                <button class="filter-btn" data-category="travel">Travel</button>
+                <button class="filter-btn" data-category="lifestyle">Lifestyle</button>
+                <button class="filter-btn" data-category="food">Food</button>
+            </div>
+
+            <div class="blogs-container" id="blogsContainer">
+                <!-- Blogs will be loaded here dynamically -->
+            </div>
+
+            <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+        </div>
+
+        <style>
+            /* Enhanced Blog Section Styles */
+            .blogs-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 2rem;
+                margin-bottom: 3rem;
+            }
+
+            .blog-card {
+                background-color: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                padding: 1.8rem;
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeInUp 0.6s forwards;
+                animation-delay: calc(var(--order) * 0.1s);
+            }
+
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .blog-card:hover {
+                transform: translateY(-8px) !important;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+            }
+
+            .blog-category {
+                display: inline-block;
+                padding: 0.4rem 1rem;
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                border-radius: 50px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+                color: white;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .blog-title {
+                font-size: 1.4rem;
+                margin-bottom: 1rem;
+                color: var(--dark);
+                transition: color 0.3s ease;
+                line-height: 1.4;
+            }
+
+            .blog-card:hover .blog-title {
+                color: var(--primary);
+            }
+
+            .blog-excerpt {
+                color: var(--gray);
+                margin-bottom: 1.5rem;
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+
+            .blog-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.85rem;
+                color: var(--gray);
+                border-top: 1px solid var(--light-gray);
+                padding-top: 1rem;
+            }
+
+            .blog-author {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .author-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #4361ee, #4895ef);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 0.9rem;
+            }
+
+            .load-more-btn {
+                display: block;
+                margin: 3rem auto 0;
+                padding: 1rem 2.5rem;
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                color: white;
+                border: none;
+                border-radius: 50px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 600;
+                box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .load-more-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+            }
+
+            .load-more-btn::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: 0.5s;
+            }
+
+            .load-more-btn:hover::after {
+                left: 100%;
+            }
+
+            /* Filter buttons */
+            .filter-btn {
+                padding: 0.7rem 1.8rem;
+                border: none;
+                background-color: var(--light-gray);
+                color: var(--dark);
+                border-radius: 50px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 500;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .filter-btn:hover {
+                background-color: #d1d7e0;
+            }
+
+            .filter-btn.active {
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                color: white;
+                box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+            }
+
+            /* Pulse animation when filtering */
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .filtering {
+                animation: pulse 0.4s ease;
+            }
+        </style>
+        
+        <script>
+            // Blog Data
+            const blogData = [
+                {
+                    id: 1,
+                    title: "The Future of Artificial Intelligence",
+                    excerpt: "Exploring how AI will transform industries in the next decade and what it means for professionals.",
+                    category: "technology",
+                    author: "Jane Smith",
+                    date: "May 20, 2025",
+                    initials: "JS"
+                },
+                {
+                    id: 2,
+                    title: "Hidden Gems in Southeast Asia",
+                    excerpt: "Discover these less-traveled destinations that offer authentic cultural experiences away from tourist crowds.",
+                    category: "travel",
+                    author: "Mike Johnson",
+                    date: "June 3, 2025",
+                    initials: "MJ"
+                },
+                {
+                    id: 3,
+                    title: "Minimalist Living: Less is More",
+                    excerpt: "How adopting a minimalist lifestyle can reduce stress and increase happiness in our modern world.",
+                    category: "lifestyle",
+                    author: "Sarah Williams",
+                    date: "June 5, 2025",
+                    initials: "SW"
+                },
+                {
+                    id: 4,
+                    title: "Sustainable Eating in 2025",
+                    excerpt: "New trends in sustainable food practices that are changing how we think about our diets.",
+                    category: "food",
+                    author: "David Chen",
+                    date: "June 3, 2025",
+                    initials: "DC"
+                },
+                {
+                    id: 5,
+                    title: "Web Development Trends to Watch",
+                    excerpt: "The most exciting developments in web technology that will dominate 2024 and beyond.",
+                    category: "technology",
+                    author: "Alex Rivera",
+                    date: "May 30, 2025",
+                    initials: "AR"
+                },
+                {
+                    id: 6,
+                    title: "Mountain Retreats in the Alps",
+                    excerpt: "The most breathtaking alpine getaways for your next European adventure.",
+                    category: "travel",
+                    author: "Emma Wilson",
+                    date: "April 28, 2025",
+                    initials: "EW"
+                },
+                {
+                    id: 7,
+                    title: "Mindfulness for Busy Professionals",
+                    excerpt: "Simple techniques to incorporate mindfulness into your hectic work schedule.",
+                    category: "lifestyle",
+                    author: "James Peterson",
+                    date: "March 25, 2025",
+                    initials: "JP"
+                },
+                {
+                    id: 8,
+                    title: "Plant-Based Recipes for Summer",
+                    excerpt: "Delicious and easy vegan dishes perfect for warm weather dining.",
+                    category: "food",
+                    author: "Lisa Nguyen",
+                    date: "Feb 13, 2025",
+                    initials: "LN"
+                }
+            ];
+
+            // DOM Elements
+            const blogsContainer = document.getElementById('blogsContainer');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            // Variables
+            let visibleBlogs = 4;
+            let currentCategory = 'all';
+
+            // Initialize
+            renderBlogs(blogData.slice(0, visibleBlogs), currentCategory);
+
+            // Event Listeners
+            loadMoreBtn.addEventListener('click', loadMoreBlogs);
+            filterButtons.forEach(button => {
+                button.addEventListener('click', filterBlogs);
+            });
+
+            // Functions
+            function renderBlogs(blogs, category) {
+                blogsContainer.innerHTML = '';
+
+                const filteredBlogs = category === 'all'
+                    ? blogs
+                    : blogs.filter(blog => blog.category === category);
+
+                if (filteredBlogs.length === 0) {
+                    blogsContainer.innerHTML = '<p class="no-blogs">No blogs found in this category.</p>';
+                    return;
+                }
+
+                filteredBlogs.forEach((blog, index) => {
+                    const blogElement = document.createElement('div');
+                    blogElement.className = 'blog-card';
+                    blogElement.style.setProperty('--order', index);
+
+                    blogElement.innerHTML = `
+            <span class="blog-category">${blog.category.toUpperCase()}</span>
+            <h3 class="blog-title">${blog.title}</h3>
+            <p class="blog-excerpt">${blog.excerpt}</p>
+            <div class="blog-meta">
+                <div class="blog-author">
+                    <div class="author-avatar">${blog.initials}</div>
+                    <span>${blog.author}</span>
+                </div>
+                <span>${blog.date}</span>
+            </div>
+        `;
+
+                    blogsContainer.appendChild(blogElement);
+                });
+            }
+
+            function loadMoreBlogs() {
+                visibleBlogs += 4;
+                const blogsToShow = blogData.slice(0, visibleBlogs);
+                renderBlogs(blogsToShow, currentCategory);
+
+                // Hide button if all blogs are shown
+                if (visibleBlogs >= blogData.length) {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+
+            function filterBlogs(e) {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                e.target.classList.add('filtering');
+                setTimeout(() => e.target.classList.remove('filtering'), 400);
+
+                // Reset visible blogs count when filtering
+                visibleBlogs = 4;
+                currentCategory = e.target.dataset.category;
+
+                // Show all blogs if "All" is selected, otherwise filter
+                const blogsToShow = currentCategory === 'all'
+                    ? blogData.slice(0, visibleBlogs)
+                    : blogData.filter(blog => blog.category === currentCategory).slice(0, visibleBlogs);
+
+                renderBlogs(blogsToShow, currentCategory);
+
+                // Show/hide load more button
+                if (currentCategory === 'all') {
+                    loadMoreBtn.style.display = blogData.length > visibleBlogs ? 'block' : 'none';
+                } else {
+                    const filteredCount = blogData.filter(blog => blog.category === currentCategory).length;
+                    loadMoreBtn.style.display = filteredCount > visibleBlogs ? 'block' : 'none';
+                }
+            }
+        </script>
+        
+    </section>
+
+    <!-- Publish Section -->
+    <section id="publish" class="section publish-section">
+        <div class="container">
+            <h2>Publish <span>Your Story</span></h2>
+            <form id="blog-form" class="blog-form">
+                <div class="form-group">
+                    <label for="blog-title">Blog Title</label>
+                    <input type="text" id="blog-title" required placeholder="Enter your blog title">
+                </div>
+                <div class="form-group">
+                    <label for="blog-category">Category</label>
+                    <select id="blog-category" required>
+                        <option value="">Select a category</option>
+                        <option value="technology">Technology</option>
+                        <option value="travel">Travel</option>
+                        <option value="lifestyle">Lifestyle</option>
+                        <option value="food">Food</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="blog-image">Featured Image</label>
+                    <input type="file" id="blog-image" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="blog-content">Your Story</label>
+                    <textarea id="blog-content" rows="10" required
+                        placeholder="Write your blog content here..."></textarea>
+                </div>
+               <!-- Success Modal (hidden by default) -->
+<div id="publish-success-modal" class="success-modal">
+  <div class="success-modal-content">
+    <button class="close-modal-btn">&times;</button>
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+      </svg>
+    </div>
+    <h3>Success!</h3>
+    <p>Your blog has been successfully published.</p>
+    <button class="modal-ok-btn">OK</button>
+  </div>
+</div>
+
+<!-- Your existing button -->
+<button type="submit" class="submit-btn" id="publish-btn">Publish Blog</button>
+
+<style>
+  /* Success Modal Styles */
+  .success-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s;
+  }
+
+  .success-modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    animation: slideUp 0.4s;
+  }
+
+  .close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+  }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    background-color: blue;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem;
+  }
+
+  .success-icon svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+  }
+
+  .success-modal h3 {
+    color: blue;
+    margin-bottom: 0.5rem;
+  }
+
+  .success-modal p {
+    color: #555;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-ok-btn {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+
+  .modal-ok-btn:hover {
+    background-color: blue;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to { 
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  // Show modal when publish button is clicked
+  document.getElementById('publish-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // In a real implementation, you would submit the form first
+    // Then show the modal on success
+    document.getElementById('publish-success-modal').style.display = 'flex';
+  });
+
+  // Close modal methods
+  document.querySelector('.close-modal-btn').addEventListener('click', function() {
+    document.getElementById('publish-success-modal').style.display = 'none';
+  });
+
+  document.querySelector('.modal-ok-btn').addEventListener('click', function() {
+    document.getElementById('publish-success-modal').style.display = 'none';
+  });
+
+  // Close when clicking outside modal
+  document.getElementById('publish-success-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
+</script>
+            </form>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <h2>About <span>Us</span></h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Story</h3>
+                    <p>NexusBlog was founded in 2020 with a simple mission: to create a platform where anyone can share
+                        their stories and connect with like-minded individuals. What started as a small community of
+                        writers has grown into a vibrant ecosystem of storytellers, thinkers, and creators.</p>
+
+                    <h3>Our Vision</h3>
+                    <p>We believe everyone has a story worth telling. Our platform is designed to empower writers of all
+                        levels to publish their work, grow their audience, and connect with readers who appreciate their
+                        unique perspective.</p>
+
+                    <h3>Our Team</h3>
+                    <p>Behind NexusBlog is a diverse team of developers, designers, editors, and community managers who
+                        are passionate about creating the best possible experience for our users. We're constantly
+                        working to improve our platform and introduce new features.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10,000+</span>
+                        <span class="stat-label">Published Blogs</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50,000+</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">Countries Reached</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="parallax contact-section">
+        <div class="parallax-content">
+            <div class="container">
+                <h2 style="color: aliceblue;">Contact <span>Us</span></h2>
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <h3>Phone</h3>
+                            <p>+1 (555) 123-4567</p>
+                            <p>+1 (555) 987-6543</p>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <h3>Email</h3>
+                            <p>info@nexusblog.com</p>
+                            <p>support@nexusblog.com</p>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h3>Address</h3>
+                            <p>123 Digital Avenue</p>
+                            <p>Tech City, CA 90210</p>
+                        </div>
+                    </div>
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+                <div class="social-media">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-medium"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="login" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                <button type="button" class="social-login google-login">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <button type="button" class="social-login facebook-login">
+                    <i class="fab fa-facebook-f"></i> Continue with Facebook
+                </button>
+                <p class="auth-switch">Don't have an account? <a href="#register"
+                        class="switch-to-register">Register</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Register</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" required>
+                </div>
+                <button type="submit" class="submit-btn">Register</button>
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                <button type="button" class="social-login google-login">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <button type="button" class="social-login facebook-login">
+                    <i class="fab fa-facebook-f"></i> Continue with Facebook
+                </button>
+                <p class="auth-switch">Already have an account? <a href="#login" class="switch-to-login">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Navigation functionality
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+
+                    // Check if it's login or register link
+                    if (targetId === '#login' || targetId === '#register') {
+                        e.preventDefault();
+                        const modal = document.querySelector(targetId);
+                        if (modal) {
+                            // Close any open modals first
+                            document.querySelectorAll('.modal').forEach(m => {
+                                m.style.display = 'none';
+                            });
+                            // Show the requested modal
+                            modal.style.display = 'flex';
+                            document.body.style.overflow = 'hidden';
+                        }
+                    } else {
+                        // Regular section navigation
+                        e.preventDefault();
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, targetId);
+                        }
+                    }
+                });
+            });
+
+            // Close modals when clicking close button
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    this.closest('.modal').style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            });
+
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            });
+
+            // Switch between login and register forms
+            document.querySelectorAll('.switch-to-register').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById('login').style.display = 'none';
+                    document.getElementById('register').style.display = 'flex';
+                });
+            });
+
+            document.querySelectorAll('.switch-to-login').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById('register').style.display = 'none';
+                    document.getElementById('login').style.display = 'flex';
+                });
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.getElementById('navbar');
+                if (!navbar) return;
+
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function () {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                });
+            }
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function () {
+                    if (window.innerWidth <= 768 && navLinks) {
+                        navLinks.style.display = 'none';
+                    }
+                });
+            });
+
+            // Form submission handlers
+            document.getElementById('login-form')?.addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Add login logic here
+                console.log('Login form submitted');
+            });
+
+            document.getElementById('register-form')?.addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Add registration logic here
+                console.log('Register form submitted');
+            });
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>NexusBlog</h3>
+                    <p>A platform for storytellers and thinkers to share their ideas with the world.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" data-target="home">Home</a></li>
+                        <li><a href="#" data-target="explore">Explore</a></li>
+                        <li><a href="#" data-target="publish">Publish</a></li>
+                        <li><a href="#" data-target="about">About</a></li>
+                        <li><a href="#" data-target="contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="#" data-category="technology">Technology</a></li>
+                        <li><a href="#" data-category="travel">Travel</a></li>
+                        <li><a href="#" data-category="lifestyle">Lifestyle</a></li>
+                        <li><a href="#" data-category="food">Food</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 NexusBlog. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+
+                    // Update URL without page reload
+                    history.pushState(null, null, targetId);
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', function () {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 768) {
+                    navLinks.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
